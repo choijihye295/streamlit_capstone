@@ -1,6 +1,8 @@
 import streamlit as st
 import pandas as pd
 import datetime
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
 
 
 def get_sensor_data(target_time):
@@ -75,13 +77,44 @@ def main():
    # 데이터 가져오기
    historical_data = get_historical_data()
 
-   # 온도 그래프
-   st.write("내부 온도 변화")
-   st.line_chart(historical_data.set_index('저장시간')['내부온도'])
+   # 온도와 습도를 하나의 차트에 표시
+   fig = make_subplots(specs=[[{"secondary_y": True}]])
 
-   # 습도 그래프
-   st.write("내부 습도 변화")
-   st.line_chart(historical_data.set_index('저장시간')['내부습도'])
+   # 온도 데이터 추가 (주 y축)
+   fig.add_trace(
+       go.Scatter(
+           x=historical_data['저장시간'],
+           y=historical_data['내부온도'],
+           name="내부 온도",
+           line=dict(color="#FF4B4B")
+       ),
+       secondary_y=False,
+   )
+
+   # 습도 데이터 추가 (보조 y축)
+   fig.add_trace(
+       go.Scatter(
+           x=historical_data['저장시간'],
+           y=historical_data['내부습도'],
+           name="내부 습도",
+           line=dict(color="#4B4BFF")
+       ),
+       secondary_y=True,
+   )
+
+   # 레이아웃 업데이트
+   fig.update_layout(
+       title='내부 온도 및 습도 변화',
+       xaxis_title="시간",
+       height=400,
+   )
+
+   # y축 제목 업데이트
+   fig.update_yaxes(title_text="온도 (°C)", secondary_y=False)
+   fig.update_yaxes(title_text="습도 (%)", secondary_y=True)
+
+   # 플로틀리 차트 표시
+   st.plotly_chart(fig, use_container_width=True)
 
 
 if __name__ == '__main__':
