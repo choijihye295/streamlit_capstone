@@ -3,7 +3,9 @@ import pandas as pd
 import numpy as np
 
 def main():
-    st.title('내 Streamlit 대시보드')
+    st.title('익산 토마토셋 대시보드')
+
+    st.divider()
     
     # 데이터 생성 및 시각화
     chart_data = pd.DataFrame(
