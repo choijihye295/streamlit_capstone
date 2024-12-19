@@ -255,7 +255,9 @@ def create_combined_graph(historical_data, prediction_data):
 
     # 레이아웃 설정
     fig.update_layout(
-        margin=dict(l=50, r=50, t=30, b=30),
+        margin=dict(l=80, r=80, t=50, b=50),
+        autosize=False,  # 자동 크기 조정 비활성화
+        width=1200,      # 그래프 너비 설정
         height=600,  # 고정 높이 설정
         plot_bgcolor='white',
         paper_bgcolor='white',
@@ -375,8 +377,10 @@ def main():
         st.subheader('과거 30분 내부 환경 변화 및 예측', anchor=False)
         fig = create_combined_graph(historical_data, prediction_data)
         st.plotly_chart(fig, use_container_width=True, config={
-            'displayModeBar': False,
-            'staticPlot': True
+            'displayModeBar': True,
+            'staticPlot': False,    #툴팁 (그래프 가져다대면 정보 나오게)
+            'displaylogo': False,     # Plotly 로고 비활성화
+            'scrollZoom': True,      # 스크롤로 줌 가능
         })
         
     time.sleep(1)
